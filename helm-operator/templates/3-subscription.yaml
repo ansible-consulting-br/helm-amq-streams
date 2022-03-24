@@ -1,0 +1,12 @@
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: {{ .Values.amqStreams.subscription.name | default "amq-streams" }}
+spec:
+  channel: {{ .Values.amqStreams.subscription.channel | default "amq-streams-2.x" }}
+  installPlanApproval: {{ .Values.amqStreams.subscription.installPlanApproval | default "Automatic" }}
+  name: {{ .Values.amqStreams.subscription.name | default "amq-streams" }}
+  source: {{ .Values.amqStreams.subscription.source | default "redhat-operators" }}
+  sourceNamespace: {{ .Values.amqStreams.subscription.sourceNamespace | default "openshift-marketplace" }}
+  startingCSV: {{ .Values.amqStreams.subscription.startingCSV | default "amqstreams.v2.0.1-1" }}

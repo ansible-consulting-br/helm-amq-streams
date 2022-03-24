@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/description: {{ .Values.amqStreams.namespace.description }}
+    openshift.io/display-name: {{ .Values.amqStreams.namespace.displayName | quote }}
+    openshift.io/node-selector: {{ .Values.amqStreams.namespace.nodeSelector | quote }}
+  labels:
+    kubernetes.io/metadata.name: {{ .Values.amqStreams.namespace.name }}
+    app.kubernetes.io/managed-by: "Helm"
+  name: {{ .Values.amqStreams.namespace.name }}
+spec:

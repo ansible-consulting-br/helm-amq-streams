@@ -1,0 +1,9 @@
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ print .Values.amqStreams.namespace.name "-og" }}
+  namespace: {{ .Values.amqStreams.namespace.name }}
+spec:
+  targetNamespaces:
+    - {{ .Values.amqStreams.namespace.name }}

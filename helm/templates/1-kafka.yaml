@@ -1,0 +1,58 @@
+---
+kind: Kafka
+apiVersion: kafka.strimzi.io/v1beta2
+metadata:
+  name: {{ .Values.amqStreams.kafka.name }}
+spec:
+  kafka:
+    version: {{ .Values.amqStreams.kafka.version | default "3.0.0" }}
+    replicas: {{ .Values.amqStreams.kafka.replicas | default "3" }}
+    listeners:
+      {{- toYaml .Values.amqStreams.kafka.listeners | nindent 6 }}
+    readinessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    livenessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    resources: 
+      requests:
+        memory: {{ .Values.amqStreams.kafka.resources.requests.memory | default "4Gi" }}
+        cpu:  {{ .Values.amqStreams.kafka.resources.requests.cpu | default "1" }}
+      limits:
+        memory: {{ .Values.amqStreams.kafka.resources.limits.memory | default "8Gi" }}
+        cpu: {{ .Values.amqStreams.kafka.resources.limits.cpu | default "2" }}
+    jvmOptions: 
+      -Xms: {{ .Values.amqStreams.kafka.jvmOptions.Xms | default "4096" }}
+      -Xmx: {{ .Values.amqStreams.kafka.jvmOptions.Xmx | default "4096" }}
+    config:
+      {{- toYaml .Values.amqStreams.kafka.config | nindent 6 }}
+    storage:
+      type: {{ .Values.amqStreams.kafka.storage.type | default "ephemeral" }}
+      {{- if eq .Values.amqStreams.kafka.storage.type "jbod" }}
+      volumes:
+        {{- toYaml .Values.amqStreams.kafka.storage.volumes | nindent 6 }}
+      {{- end }}
+  zookeeper:
+    replicas: {{ .Values.amqStreams.zookeeper.replicas | default "3" }}
+    resources: 
+      requests:
+        memory: {{ .Values.amqStreams.zookeeper.resources.requests.memory | default "4Gi" }}
+        cpu:  {{ .Values.amqStreams.zookeeper.resources.requests.cpu | default "1" }}
+      limits:
+        memory: {{ .Values.amqStreams.zookeeper.resources.limits.memory | default "8Gi" }}
+        cpu: {{ .Values.amqStreams.zookeeper.resources.limits.cpu | default "2" }}
+    jvmOptions: 
+      -Xms: {{ .Values.amqStreams.zookeeper.jvmOptions.Xms | default "4096" }}
+      -Xmx: {{ .Values.amqStreams.zookeeper.jvmOptions.Xmx | default "4096" }}    
+    storage:
+      {{- if ne .Values.amqStreams.zookeeper.storage.type "ephemeral" }}
+      type: persistent-claim
+      size: {{ .Values.amqStreams.zookeeper.storage.size | default "100Gi" }}
+      deleteClaim: false
+      {{- else }}
+      type: ephemeral
+      {{- end }}
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
