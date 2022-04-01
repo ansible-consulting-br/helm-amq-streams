@@ -31,11 +31,11 @@ amqStreams:
   topics:
     - name: marvel
       partitions: 10
-      replicas: 3
+      replicas: 1
     - name: dc
       partitions: 6
-      replicas: 2
+      replicas: 1
     - name: dbz
       partitions: 15
-      replicas: 3
+      replicas: 1
 #  users:
