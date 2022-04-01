@@ -9,4 +9,3 @@ spec:
   name: {{ .Values.amqStreams.subscription.name | default "amq-streams" }}
   source: {{ .Values.amqStreams.subscription.source | default "redhat-operators" }}
   sourceNamespace: {{ .Values.amqStreams.subscription.sourceNamespace | default "openshift-marketplace" }}
-  startingCSV: {{ .Values.amqStreams.subscription.startingCSV | default "amqstreams.v2.0.1-1" }}
