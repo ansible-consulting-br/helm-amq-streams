@@ -34,8 +34,8 @@ spec:
       {{- toYaml .Values.amqStreams.kafka.jvmOptions | nindent 6 }}
 {{- else }}
     jvmOptions: 
-      -Xms: 2048
-      -Xmx: 2048
+      -Xms: "2048"
+      -Xmx: "2048"
 {{- end }}
 {{- if .Values.amqStreams.kafka.logging }}
     logging:
@@ -87,8 +87,8 @@ spec:
       {{- toYaml .Values.amqStreams.zookeeper.jvmOptions | nindent 6 }}
 {{- else }}
     jvmOptions: 
-      -Xms: 1024
-      -Xmx: 1024
+      -Xms: "1024"
+      -Xmx: "1024"
 {{- end }}
 {{- if .Values.amqStreams.zookeeper.readinessProbe }}
     readinessProbe:
