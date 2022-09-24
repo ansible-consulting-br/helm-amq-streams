@@ -9,50 +9,118 @@ spec:
     replicas: {{ .Values.amqStreams.kafka.replicas | default "3" }}
     listeners:
       {{- toYaml .Values.amqStreams.kafka.listeners | nindent 6 }}
-    readinessProbe:
-      initialDelaySeconds: 15
-      timeoutSeconds: 5
-    livenessProbe:
-      initialDelaySeconds: 15
-      timeoutSeconds: 5
-    resources: 
-      requests:
-        memory: {{ .Values.amqStreams.kafka.resources.requests.memory | default "4Gi" }}
-        cpu:  {{ .Values.amqStreams.kafka.resources.requests.cpu | default "1" }}
-      limits:
-        memory: {{ .Values.amqStreams.kafka.resources.limits.memory | default "8Gi" }}
-        cpu: {{ .Values.amqStreams.kafka.resources.limits.cpu | default "2" }}
-    jvmOptions: 
-      -Xms: {{ .Values.amqStreams.kafka.jvmOptions.Xms | default "4096" }}
-      -Xmx: {{ .Values.amqStreams.kafka.jvmOptions.Xmx | default "4096" }}
+{{- if .Values.amqStreams.kafka.authorization }}
+    authorization:
+      {{- toYaml .Values.amqStreams.kafka.authorization | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.config }}
     config:
       {{- toYaml .Values.amqStreams.kafka.config | nindent 6 }}
-    storage:
-      type: {{ .Values.amqStreams.kafka.storage.type | default "ephemeral" }}
-      {{- if eq .Values.amqStreams.kafka.storage.type "jbod" }}
-      volumes:
-        {{- toYaml .Values.amqStreams.kafka.storage.volumes | nindent 6 }}
-      {{- end }}
-  zookeeper:
-    replicas: {{ .Values.amqStreams.zookeeper.replicas | default "3" }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.resources }}
+    resources:
+      {{- toYaml .Values.amqStreams.kafka.resources | nindent 6 }}
+{{- else }}
     resources: 
       requests:
-        memory: {{ .Values.amqStreams.zookeeper.resources.requests.memory | default "4Gi" }}
-        cpu:  {{ .Values.amqStreams.zookeeper.resources.requests.cpu | default "1" }}
+        memory: 2Gi
+        cpu:  1
       limits:
-        memory: {{ .Values.amqStreams.zookeeper.resources.limits.memory | default "8Gi" }}
-        cpu: {{ .Values.amqStreams.zookeeper.resources.limits.cpu | default "2" }}
+        memory: 4Gi
+        cpu: 2
+{{- end }}
+{{- if .Values.amqStreams.kafka.jvmOptions }}
+    jvmOptions:
+      {{- toYaml .Values.amqStreams.kafka.jvmOptions | nindent 6 }}
+{{- else }}
     jvmOptions: 
-      -Xms: {{ .Values.amqStreams.zookeeper.jvmOptions.Xms | default "4096" }}
-      -Xmx: {{ .Values.amqStreams.zookeeper.jvmOptions.Xmx | default "4096" }}    
+      -Xms: 2048
+      -Xmx: 2048
+{{- end }}
+{{- if .Values.amqStreams.kafka.logging }}
+    logging:
+      {{- toYaml .Values.amqStreams.kafka.logging | nindent 6 }}
+{{- else }}
+    logging:
+      type: inline
+      loggers:
+        log4j.logger.io.strimzi: "INFO"
+        log4j.logger.kafka: "INFO"
+        log4j.logger.org.apache.kafka: "INFO"
+{{- end }}
+{{- if .Values.amqStreams.kafka.readinessProbe }}
+    readinessProbe:
+      {{- toYaml .Values.amqStreams.kafka.readinessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.livenessProbe }}
+    livenessProbe:
+      {{- toYaml .Values.amqStreams.kafka.livenessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.storage }}
     storage:
-      {{- if ne .Values.amqStreams.zookeeper.storage.type "ephemeral" }}
-      type: persistent-claim
-      size: {{ .Values.amqStreams.zookeeper.storage.size | default "100Gi" }}
-      deleteClaim: false
-      {{- else }}
-      type: ephemeral
-      {{- end }}
+      {{- toYaml .Values.amqStreams.kafka.storage | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.metricsConfig }}
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: kafka-metrics-config.yml
+{{- end }}
+  zookeeper:
+    replicas: {{ .Values.amqStreams.zookeeper.replicas | default "3" }}
+{{- if .Values.amqStreams.zookeeper.resources }}
+    resources:
+      {{- toYaml .Values.amqStreams.zookeeper.resources | nindent 6 }}
+{{- else }}
+    resources: 
+      requests:
+        memory: '1Gi'
+        cpu:  '500m'
+      limits:
+        memory: '2Gi'
+        cpu: 1
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.jvmOptions }}
+    jvmOptions:
+      {{- toYaml .Values.amqStreams.zookeeper.jvmOptions | nindent 6 }}
+{{- else }}
+    jvmOptions: 
+      -Xms: 1024
+      -Xmx: 1024
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.readinessProbe }}
+    readinessProbe:
+      {{- toYaml .Values.amqStreams.zookeeper.readinessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.livenessProbe }}
+    livenessProbe:
+      {{- toYaml .Values.amqStreams.zookeeper.livenessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.storage }}
+    storage:
+      {{- toYaml .Values.amqStreams.zookeeper.storage | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.metricsConfig }}
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: zookeeper-metrics-config.yml
+{{- end }}
   entityOperator:
     topicOperator: {}
     userOperator: {}
+{{- if and .Values.amqStreams.zookeeper.metricsConfig }}
+{{- if and .Values.amqStreams.kafkaExporter }}
+  kafkaExporter:
+    topicRegex: {{ .Values.amqStreams.kafkaExporter.topicRegex | default ".*" }}
+    groupRegex: {{ .Values.amqStreams.kafkaExporter.groupRegex | default ".*" }}
+{{- else }}
+  kafkaExporter:
+    topicRegex: ".*"
+    groupRegex: ".*"
+{{- end }}
+{{- end }}

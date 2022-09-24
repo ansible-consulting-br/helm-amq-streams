@@ -1,0 +1,30 @@
+{{- if .Values.amqStreams.users }}
+{{- range $user := .Values.amqStreams.users }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: {{ $user.name }}
+  labels:
+    strimzi.io/cluster: {{ $.Values.amqStreams.kafka.name }}
+spec:
+{{- if $user.authentication }}
+  authentication:
+    {{- toYaml $user.authentication | nindent 4 }}
+{{- else }}
+  authentication:
+    type: scram-sha-512
+{{- end }}
+{{- if $user.authorization }}
+  authorization:
+    {{- toYaml $user.authorization | nindent 4 }}
+{{- else }}
+  authorization:
+    type: simple
+{{- end }}
+{{- if $user.quotas }}
+  quotas:
+    {{- toYaml $user.quotas | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}

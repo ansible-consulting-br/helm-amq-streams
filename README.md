@@ -8,9 +8,81 @@ O Helm pode ser baixado e instalado seguindo as intruções em: https://helm.sh/
 
 ## Instalação do operator
 
+### Estrutura do projeto
+
+```bash
+.
+├── Chart.yaml
+├── examples
+│   ├── kafka
+│   │   ├── values-auth-keycloak.yaml
+│   │   ├── values-auth-scram-sha-512.yaml
+│   │   ├── values-auth-tls.yaml
+│   │   ├── values-ephemeral-single.yaml
+│   │   ├── values-ephemeral.yaml
+│   │   ├── values-persistent-single.yaml
+│   │   └── values-persistent.yaml
+│   └── users
+│       ├── values-users-auth-scram-sha-512.yaml
+│       └── values-users-auth-tls.yaml
+├── templates
+│   ├── 1-kafka.yaml
+│   ├── 2-kafka-topics.yaml
+│   ├── 3-kafka-users.yaml
+│   └── 4-kafka-metrics-config.yaml
+├── values-topics.yaml
+├── values-users.yaml
+└── values.yaml
 ```
-helm install -f helm-operator/values.yaml amq-streams helm-operator/
+
+### Instalando o Kafka
+
+
+#### Instalação básica
+
+A instalação básica leva em consideração apenas o `values.yaml` com um cluster efêmero (sem persistência), sem usuários e tópicos.
+
+```bash
+helm install amq-streams helm-operator/
 ```
+
+É possível compor values para instalar o kafka com diferentes configurações, por exemplo:
+
+```bash
+helm install amq-streams --values=helm-operator/values-users.yaml --values=helm-operator/values-topics.yaml helm-operator/
+```
+
+#### Instalações avançadas
+
+Compondo arquivos de values para adicionar/substituir configurações, podemos instalar o Kafka com as configurações:
+
+##### AMQ Streams persistente
+
+```bash
+helm install amq-streams --values=helm-operator/examples/kafka/values-persistent.yaml --values=helm-operator/values-users.yaml --values=helm-operator/values-topics.yaml helm-operator/
+```
+
+##### AMQ Streams persistente com autenticação TLS
+
+```bash
+helm install amq-streams --values=helm-operator/examples/kafka/values-auth-tls.yaml --values=helm-operator/examples/values-users-auth-tls.yaml --values=helm-operator/values-topics.yaml helm-operator/
+```
+
+##### AMQ Streams persistente com autenticação Scram-sha-512
+
+```bash
+helm install amq-streams --values=helm-operator/examples/kafka/values-auth-scram-sha-512.yaml --values=helm-operator/examples/values-users-auth-scram-sha-512.yaml --values=helm-operator/values-topics.yaml helm-operator/
+```
+
+##### AMQ Streams persistente com autenticação RH-SSO (Keycloak)
+
+Nessa configuração, não é preciso criar usuários.
+
+```bash
+helm install amq-streams --values=helm-operator/examples/kafka/values-auth-keycloak.yaml --values=helm-operator/values-topics.yaml helm-operator/
+```
+
+**OBS:** Um exemplo de configuração do RH-SSO (Keycloak) pode ser encontrado no artefato *Red Hat AMQ Streams 2.X OpenShift Installation and Example Files*, na página de downloads da Red Hat (https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.amq.streams&productChanged=yes).
 
 ### Parâmetros para deploy do Helm
 
@@ -22,31 +94,47 @@ Parâmetro                                      | Descrição
 `amqStreams.subscriptions.installPlanApproval` | LInstall plan approval (Automatic ou Manual)
 `amqStreams.subscriptions.source`              | Fonte da subscription (Default: redhat-operators)
 `amqStreams.subscriptions.sourceNamespace`     | Namespace do operator (Default: openshift-marketplace)
-`amqStreams.subscriptions.startingCSV`         | Versão inicial (Default: amqstreams.v2.0.1-1)
 
 ## Instalação do AMQ Streams
 
 ```
-helm install -f helm/examples/values-ephemeral-single.yaml amq-streams helm/
+helm install amq-streams helm/
 ```
 
 ### Parâmetros para deploy do Helm
 
-Parâmetro                         | Descrição
-------------------------------    | -------------------------
-`amqStreams.namespace.name`       | 
-`amqStreams.kafka.name`           | Nome do cluster Kafka
-`amqStreams.kafka.replicas`       | Quantidade de réplicas do Kafka
-`amqStreams.kafka.listeners`      | Listeners Kafka
-`amqStreams.kafka.resources`      | Recursos de CPU e memória para o Kafka
-`amqStreams.kafka.jvmOptions`     | Opções de JVM para o Kafka
-`amqStreams.kafka.config`         | Configurações gerais do Kafka
-`amqStreams.kafka.storage`        | Configuraões de storage para o Kafka
-`amqStreams.zookeeper.replicas`   | Quantidade de réplicas do Zookeeper
-`amqStreams.zookeeper.resources`  | Recursos de CPU e memória para o Zookeeper
-`amqStreams.zookeeper.jvmOptions` | Opções de JVM para o Zookeeper
-`amqStreams.zookeeper.storage`    | Configuraões de storage para o Zookeeper
-`amqStreams.topics`               | Tópicos a serem criados
-`amqStreams.topics[*].name`       | Nome do tópico
-`amqStreams.topics[*].partitions` | Quantidade de partições do tópico
-`amqStreams.topics[*].replicas`   | Quantidade de replicas do tópico
+Parâmetro                             | Descrição
+------------------------------        | --------------------------------------------
+`amqStreams.kafka.name`               | Nome do cluster Kafka
+`amqStreams.kafka.replicas`           | Quantidade de réplicas do Kafka
+`amqStreams.kafka.version`            | Versão do Kafka
+`amqStreams.kafka.listeners`          | Listeners Kafka
+`amqStreams.kafka.authorization`      | Configuração de autorização para o cluster kafka 
+`amqStreams.kafka.resources`          | Recursos de CPU e memória para o Kafka
+`amqStreams.kafka.jvmOptions`         | Opções de JVM para o Kafka
+`amqStreams.kafka.readinessProbe`     | Configuração de readinessProbes para o cluster kafka 
+`amqStreams.kafka.livenessProbe`      | Configuração de livenessProbes para o cluster kafka 
+`amqStreams.kafka.logging`            | Configurações logs do Kafka
+`amqStreams.kafka.config`             | Configurações gerais do Kafka
+`amqStreams.kafka.storage`            | Configuraões de storage para o Kafka
+`amqStreams.kafka.metricsConfig`      | Configurações de métricas do Kafka
+
+`amqStreams.zookeeper.replicas`       | Quantidade de réplicas do Zookeeper
+`amqStreams.zookeeper.resources`      | Recursos de CPU e memória para o Zookeeper
+`amqStreams.zookeeper.jvmOptions`     | Opções de JVM para o Zookeeper
+`amqStreams.zookeeper.readinessProbe` | Configuração de readinessProbes para o Zookeeper
+`amqStreams.zookeeper.livenessProbe`  | Configuração de livenessProbes para o Zookeeper
+`amqStreams.zookeeper.storage`        | Configuraões de storage para o Zookeeper
+`amqStreams.zookeeper.metricsConfig`  | Configurações de métricas para o Zookeeper
+
+`amqStreams.topics`                   | Tópicos a serem criados
+`amqStreams.topics[*].name`           | Nome do tópico
+`amqStreams.topics[*].partitions`     | Quantidade de partições do tópico
+`amqStreams.topics[*].replicas`       | Quantidade de replicas do tópico
+`amqStreams.topics[*].config`         | Configurações gerais do tópico
+
+`amqStreams.users`                    | Usuários a serem criados
+`amqStreams.users[*].name`            | Nome do usuário
+`amqStreams.users[*].authentication`  | Configurações de autenticação para o usuário
+`amqStreams.users[*].authorization`   | Configurações de autorização para o usuário
+

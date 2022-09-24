@@ -1,0 +1,16 @@
+amqStreams:
+  kafka:
+    name: amq
+  topics:
+    - name: marvel
+      partitions: 4
+      replicas: 1
+      config:
+        retention.ms: 7200000
+        segment.bytes: 1073741824
+    # - name: dc
+    #   partitions: 6
+    #   replicas: 1
+    # - name: dbz
+    #   partitions: 15
+    #   replicas: 1

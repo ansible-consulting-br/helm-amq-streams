@@ -1,11 +1,7 @@
 amqStreams:
-  namespace:
-    name: helm-amq
-    nodeSelector: 'env=amq-streams'
-    displayName: 'AMQ Streams'
-    description: 'AMQ Streams namespace automated with Helm'
   kafka:
-    name: ephemeral-single-cluster
+    name: amq
+    version: 3.1.0
     replicas: 1
     listeners:
       - name: plain
@@ -20,8 +16,9 @@ amqStreams:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1
       transaction.state.log.min.isr: 1
-      log.message.format.version: "3.0"
-      inter.broker.protocol.version: "3.0"
+      default.replication.factor: 1
+      min.insync.replicas: 1
+      inter.broker.protocol.version: "3.1"
     storage:
       type: ephemeral
   zookeeper:
@@ -29,13 +26,8 @@ amqStreams:
     storage:
       type: ephemeral
   topics:
-    - name: marvel
-      partitions: 10
-      replicas: 1
-    - name: dc
-      partitions: 6
-      replicas: 1
-    - name: dbz
-      partitions: 15
-      replicas: 1
-#  users:
+    # - name: marvel
+    #   partitions: 10
+    #   replicas: 1
+  users:
+    # - name: admin

@@ -1,18 +1,17 @@
 {{- if .Values.amqStreams.topics }}
 {{- range $topic := .Values.amqStreams.topics }}
 ---
-kind: KafkaTopic
 apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
 metadata:
   name: {{ $topic.name }}
   labels:
     strimzi.io/cluster: {{ $.Values.amqStreams.kafka.name }}
-  namespace: {{ $.Values.amqStreams.namespace.name }}
 spec:
   partitions: {{ $topic.partitions }}
   replicas: {{ $topic.replicas }}
   config:
-    retention.ms: {{ $topic.retention_ms | default 604800000 }}
+    retention.ms: {{ $topic.retention_ms | default 7200000 }}
     segment.bytes: {{ $topic.segment_bytes | default 1073741824 }}
 {{- end }}
 {{- end }}

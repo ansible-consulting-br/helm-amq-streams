@@ -1,0 +1,53 @@
+amqStreams:
+  kafka:
+    name: amq
+  users:
+    # - name: admin
+    #   authentication:
+    #     type: scram-sha-512
+    #   authorization:
+    #     type: simple
+    #     acls:
+    #       # Example ACL rules for consuming from marvel using consumer group my-group
+    #       - resource:
+    #           type: topic
+    #           name: marvel
+    #           patternType: literal
+    #         operation: Read
+    #         host: "*"
+    #       - resource:
+    #           type: topic
+    #           name: marvel
+    #           patternType: literal
+    #         operation: Describe
+    #         host: "*"
+    #       - resource:
+    #           type: group
+    #           name: my-group
+    #           patternType: literal
+    #         operation: Read
+    #         host: "*"
+    #       # Example ACL rules for producing to topic marvel
+    #       - resource:
+    #           type: topic
+    #           name: marvel
+    #           patternType: literal
+    #         operation: Write
+    #         host: "*"
+    #       - resource:
+    #           type: topic
+    #           name: marvel
+    #           patternType: literal
+    #         operation: Create
+    #         host: "*"
+    #       - resource:
+    #           type: topic
+    #           name: marvel
+    #           patternType: literal
+    #         operation: Describe
+    #         host: "*"
+    #   quotas:
+    #     consumerByteRate: 1
+    #     controllerMutationRate: 1
+    #     producerByteRate: 1
+    #     requestPercentage: 2            
