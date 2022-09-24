@@ -61,13 +61,13 @@ Parâmetro                                      | Descrição
 A instalação básica leva em consideração apenas o `values.yaml` com um cluster efêmero (sem persistência), sem usuários e tópicos.
 
 ```bash
-helm install amq-streams helm-operator/
+helm install amq-streams helm/
 ```
 
 É possível compor values para instalar o kafka com diferentes configurações, por exemplo:
 
 ```bash
-helm install amq-streams --values=helm-operator/values-users.yaml --values=helm-operator/values-topics.yaml helm-operator/
+helm install amq-streams --values=helm/values-users.yaml --values=helm/values-topics.yaml helm/
 ```
 
 #### Instalações avançadas
@@ -77,19 +77,19 @@ Compondo arquivos de values para adicionar/substituir configurações, podemos i
 ##### AMQ Streams persistente
 
 ```bash
-helm install amq-streams --values=helm-operator/examples/kafka/values-persistent.yaml --values=helm-operator/values-users.yaml --values=helm-operator/values-topics.yaml helm-operator/
+helm install amq-streams --values=helm/examples/kafka/values-persistent.yaml --values=helm/values-users.yaml --values=helm/values-topics.yaml helm/
 ```
 
 ##### AMQ Streams persistente com autenticação TLS
 
 ```bash
-helm install amq-streams --values=helm-operator/examples/kafka/values-auth-tls.yaml --values=helm-operator/examples/values-users-auth-tls.yaml --values=helm-operator/values-topics.yaml helm-operator/
+helm install amq-streams --values=helm/examples/kafka/values-auth-tls.yaml --values=helm/examples/values-users-auth-tls.yaml --values=helm/values-topics.yaml helm/
 ```
 
 ##### AMQ Streams persistente com autenticação Scram-sha-512
 
 ```bash
-helm install amq-streams --values=helm-operator/examples/kafka/values-auth-scram-sha-512.yaml --values=helm-operator/examples/values-users-auth-scram-sha-512.yaml --values=helm-operator/values-topics.yaml helm-operator/
+helm install amq-streams --values=helm/examples/kafka/values-auth-scram-sha-512.yaml --values=helm/examples/values-users-auth-scram-sha-512.yaml --values=helm/values-topics.yaml helm/
 ```
 
 ##### AMQ Streams persistente com autenticação RH-SSO (Keycloak)
@@ -97,7 +97,7 @@ helm install amq-streams --values=helm-operator/examples/kafka/values-auth-scram
 Nessa configuração, não é preciso criar usuários.
 
 ```bash
-helm install amq-streams --values=helm-operator/examples/kafka/values-auth-keycloak.yaml --values=helm-operator/values-topics.yaml helm-operator/
+helm install amq-streams --values=helm/examples/kafka/values-auth-keycloak.yaml --values=helm/values-topics.yaml helm/
 ```
 
 **OBS:** Um exemplo de configuração do RH-SSO (Keycloak) pode ser encontrado no artefato *Red Hat AMQ Streams 2.X OpenShift Installation and Example Files*, na página de downloads da Red Hat (https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=jboss.amq.streams&productChanged=yes).
