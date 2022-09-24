@@ -1,5 +1,5 @@
 ---
-{{- if .Values.amqStreams.kafka.metricsConfig }}
+# {{- if .Values.amqStreams.kafka.metricsConfig }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -162,4 +162,4 @@ data:
       labels:
         replicaId: "$2"
         memberType: "$3"
-{{- end }}
+# {{- end }}
