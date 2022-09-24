@@ -8,6 +8,24 @@ O Helm pode ser baixado e instalado seguindo as intruções em: https://helm.sh/
 
 ## Instalação do operator
 
+```bash
+helm install -f helm-operator/values.yaml amq-streams helm-operator/
+```
+
+### Parâmetros para deploy do Helm
+
+Parâmetro                                      | Descrição
+------------------------------                 | -------------------------
+`amqStreams.namespace.name`                    | Namespace onde vão ser feitas as implantações
+`amqStreams.subscriptions.name`                | Nome da subscription
+`amqStreams.subscriptions.channel`             | Canal da subscription
+`amqStreams.subscriptions.installPlanApproval` | LInstall plan approval (Automatic ou Manual)
+`amqStreams.subscriptions.source`              | Fonte da subscription (Default: redhat-operators)
+`amqStreams.subscriptions.sourceNamespace`     | Namespace do operator (Default: openshift-marketplace)
+
+## Instalação do AMQ Streams
+
+
 ### Estrutura do projeto
 
 ```bash
@@ -86,23 +104,6 @@ helm install amq-streams --values=helm-operator/examples/kafka/values-auth-keycl
 
 ### Parâmetros para deploy do Helm
 
-Parâmetro                                      | Descrição
-------------------------------                 | -------------------------
-`amqStreams.namespace.name`                    | Namespace onde vão ser feitas as implantações
-`amqStreams.subscriptions.name`                | Nome da subscription
-`amqStreams.subscriptions.channel`             | Canal da subscription
-`amqStreams.subscriptions.installPlanApproval` | LInstall plan approval (Automatic ou Manual)
-`amqStreams.subscriptions.source`              | Fonte da subscription (Default: redhat-operators)
-`amqStreams.subscriptions.sourceNamespace`     | Namespace do operator (Default: openshift-marketplace)
-
-## Instalação do AMQ Streams
-
-```
-helm install amq-streams helm/
-```
-
-### Parâmetros para deploy do Helm
-
 Parâmetro                             | Descrição
 ------------------------------        | --------------------------------------------
 `amqStreams.kafka.name`               | Nome do cluster Kafka
@@ -118,7 +119,6 @@ Parâmetro                             | Descrição
 `amqStreams.kafka.config`             | Configurações gerais do Kafka
 `amqStreams.kafka.storage`            | Configuraões de storage para o Kafka
 `amqStreams.kafka.metricsConfig`      | Configurações de métricas do Kafka
-
 `amqStreams.zookeeper.replicas`       | Quantidade de réplicas do Zookeeper
 `amqStreams.zookeeper.resources`      | Recursos de CPU e memória para o Zookeeper
 `amqStreams.zookeeper.jvmOptions`     | Opções de JVM para o Zookeeper
@@ -126,13 +126,11 @@ Parâmetro                             | Descrição
 `amqStreams.zookeeper.livenessProbe`  | Configuração de livenessProbes para o Zookeeper
 `amqStreams.zookeeper.storage`        | Configuraões de storage para o Zookeeper
 `amqStreams.zookeeper.metricsConfig`  | Configurações de métricas para o Zookeeper
-
 `amqStreams.topics`                   | Tópicos a serem criados
 `amqStreams.topics[*].name`           | Nome do tópico
 `amqStreams.topics[*].partitions`     | Quantidade de partições do tópico
 `amqStreams.topics[*].replicas`       | Quantidade de replicas do tópico
 `amqStreams.topics[*].config`         | Configurações gerais do tópico
-
 `amqStreams.users`                    | Usuários a serem criados
 `amqStreams.users[*].name`            | Nome do usuário
 `amqStreams.users[*].authentication`  | Configurações de autenticação para o usuário
