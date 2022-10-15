@@ -23,7 +23,7 @@ amqStreams:
             host: "*"
           - resource:
               type: group
-              name: my-group
+              name: springboot
               patternType: literal
             operation: Read
             host: "*"
