@@ -29,14 +29,14 @@ spec:
         memory: 4Gi
         cpu: 2
 {{- end }}
-{{- if .Values.amqStreams.kafka.jvmOptions }}
-    jvmOptions:
-      {{- toYaml .Values.amqStreams.kafka.jvmOptions | nindent 6 }}
-{{- else }}
-    jvmOptions: 
-      -Xms: "2048"
-      -Xmx: "2048"
-{{- end }}
+#{{- if .Values.amqStreams.kafka.jvmOptions }}
+#    jvmOptions:
+#      {{- toYaml .Values.amqStreams.kafka.jvmOptions | nindent 6 }}
+#{{- else }}
+#    jvmOptions: 
+#      -Xms: "2048"
+#      -Xmx: "2048"
+#{{- end }}
 {{- if .Values.amqStreams.kafka.logging }}
     logging:
       {{- toYaml .Values.amqStreams.kafka.logging | nindent 6 }}
@@ -82,14 +82,14 @@ spec:
         memory: '2Gi'
         cpu: 1
 {{- end }}
-{{- if .Values.amqStreams.zookeeper.jvmOptions }}
-    jvmOptions:
-      {{- toYaml .Values.amqStreams.zookeeper.jvmOptions | nindent 6 }}
-{{- else }}
-    jvmOptions: 
-      -Xms: "1024"
-      -Xmx: "1024"
-{{- end }}
+#{{- if .Values.amqStreams.zookeeper.jvmOptions }}
+#    jvmOptions:
+#      {{- toYaml .Values.amqStreams.zookeeper.jvmOptions | nindent 6 }}
+#{{- else }}
+#    jvmOptions: 
+#      -Xms: "1024"
+#      -Xmx: "1024"
+#{{- end }}
 {{- if .Values.amqStreams.zookeeper.readinessProbe }}
     readinessProbe:
       {{- toYaml .Values.amqStreams.zookeeper.readinessProbe | nindent 6 }}
