@@ -10,6 +10,12 @@ amqStreams:
         tls: true
         authentication:
           type: tls
+      - name: external
+        port: 9094
+        type: route
+        tls: true
+        authentication:
+          type: tls        
     authorization:
       type: simple
     config:
