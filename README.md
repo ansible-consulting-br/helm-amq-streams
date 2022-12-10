@@ -83,13 +83,13 @@ helm install amq-streams --values=helm/examples/kafka/values-persistent.yaml --v
 ##### AMQ Streams persistente com autenticação TLS
 
 ```bash
-helm install amq-streams --values=helm/examples/kafka/values-auth-tls.yaml --values=helm/examples/values-users-auth-tls.yaml --values=helm/values-topics.yaml helm/
+helm install amq-streams --values=helm/examples/kafka/values-auth-tls.yaml --values=helm/examples/users/values-users-auth-tls.yaml --values=helm/values-topics.yaml helm/
 ```
 
 ##### AMQ Streams persistente com autenticação Scram-sha-512
 
 ```bash
-helm install amq-streams --values=helm/examples/kafka/values-auth-scram-sha-512.yaml --values=helm/examples/values-users-auth-scram-sha-512.yaml --values=helm/values-topics.yaml helm/
+helm install amq-streams --values=helm/examples/kafka/values-auth-scram-sha-512.yaml --values=helm/examples/users/values-users-auth-scram-sha-512.yaml --values=helm/values-topics.yaml helm/
 ```
 
 ##### AMQ Streams persistente com autenticação RH-SSO (Keycloak)
