@@ -1,5 +1,6 @@
 amqStreams:
   kafka:
+    metricsConfig: true
     name: amq
     version: 3.1.0
     replicas: 3
@@ -47,7 +48,7 @@ amqStreams:
       #   type: persistent-claim
       #   size: 10Gi
       #   deleteClaim: false
-    metricsConfig:
+    # metricsConfig:
       # type: jmxPrometheusExporter
       # valueFrom:
       #   configMapKeyRef:
