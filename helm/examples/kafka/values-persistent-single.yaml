@@ -1,7 +1,7 @@
 amqStreams:
   kafka:
     name: amq
-    version: 3.1.0
+    version: 3.3.1
     replicas: 1
     listeners:
       - name: plain
@@ -18,7 +18,7 @@ amqStreams:
       transaction.state.log.min.isr: 1
       default.replication.factor: 1
       min.insync.replicas: 1
-      inter.broker.protocol.version: "3.1"
+      inter.broker.protocol.version: "3.3"
     storage:
       type: jbod
       volumes:
