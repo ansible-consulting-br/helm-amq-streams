@@ -5,17 +5,67 @@ metadata:
   name: {{ .Values.amqStreams.kafka.name }}
 spec:
   kafka:
-    version: {{ .Values.amqStreams.kafka.version | default "3.0.0" }}
+    version: {{ .Values.amqStreams.kafka.version }}
     replicas: {{ .Values.amqStreams.kafka.replicas | default "3" }}
+{{- if .Values.amqStreams.kafka.image }}
+    image: {{ .Values.amqStreams.kafka.image }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.listeners }}
     listeners:
       {{- toYaml .Values.amqStreams.kafka.listeners | nindent 6 }}
-{{- if .Values.amqStreams.kafka.authorization }}
-    authorization:
-      {{- toYaml .Values.amqStreams.kafka.authorization | nindent 6 }}
+{{- else }}
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+        authentication:
+          type: tls
 {{- end }}
 {{- if .Values.amqStreams.kafka.config }}
     config:
       {{- toYaml .Values.amqStreams.kafka.config | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.storage }}
+    storage:
+      {{- toYaml .Values.amqStreams.kafka.storage | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.authorization }}
+    authorization:
+      {{- toYaml .Values.amqStreams.kafka.authorization | nindent 6 }}
+{{- else }}
+    authorization:
+      type: simple
+      superUsers:
+        - CN=client_1
+        - client_2
+{{- end }}
+{{- if .Values.amqStreams.kafka.rack }}
+    rack:
+      {{- toYaml .Values.amqStreams.kafka.rack | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.brokerRackInitImage }}
+    brokerRackInitImage: {{ .Values.amqStreams.kafka.brokerRackInitImage }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.livenessProbe }}
+    livenessProbe:
+      {{- toYaml .Values.amqStreams.kafka.livenessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.readinessProbe }}
+    readinessProbe:
+      {{- toYaml .Values.amqStreams.kafka.readinessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.jvmOptions }}
+    jvmOptions:
+      {{- toYaml .Values.amqStreams.kafka.jvmOptions | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.kafka.jmxOptions }}
+    jmxOptions:
+      {{- toYaml .Values.amqStreams.kafka.jmxOptions | nindent 6 }}
 {{- end }}
 {{- if .Values.amqStreams.kafka.resources }}
     resources:
@@ -29,14 +79,17 @@ spec:
         memory: 4Gi
         cpu: 2
 {{- end }}
-#{{- if .Values.amqStreams.kafka.jvmOptions }}
-#    jvmOptions:
-#      {{- toYaml .Values.amqStreams.kafka.jvmOptions | nindent 6 }}
-#{{- else }}
-#    jvmOptions: 
-#      -Xms: "2048"
-#      -Xmx: "2048"
-#{{- end }}
+{{- if .Values.amqStreams.kafka.metricsConfig }}
+    metricsConfig:
+      {{- toYaml .Values.amqStreams.kafka.metricsConfig | nindent 6 }}
+{{- else }}
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: kafka-metrics
+          key: kafka-metrics-config.yml
+{{- end }}
 {{- if .Values.amqStreams.kafka.logging }}
     logging:
       {{- toYaml .Values.amqStreams.kafka.logging | nindent 6 }}
@@ -48,28 +101,40 @@ spec:
         log4j.logger.kafka: "INFO"
         log4j.logger.org.apache.kafka: "INFO"
 {{- end }}
-{{- if .Values.amqStreams.kafka.readinessProbe }}
-    readinessProbe:
-      {{- toYaml .Values.amqStreams.kafka.readinessProbe | nindent 6 }}
+{{- if .Values.amqStreams.kafka.template }}
+    template:
+     {{- toYaml .Values.amqStreams.kafka.template | nindent 6 }}
 {{- end }}
-{{- if .Values.amqStreams.kafka.livenessProbe }}
-    livenessProbe:
-      {{- toYaml .Values.amqStreams.kafka.livenessProbe | nindent 6 }}
-{{- end }}
-{{- if .Values.amqStreams.kafka.storage }}
-    storage:
-      {{- toYaml .Values.amqStreams.kafka.storage | nindent 6 }}
-{{- end }}
-{{- if .Values.amqStreams.kafka.metricsConfig }}
-    metricsConfig:
-      type: jmxPrometheusExporter
-      valueFrom:
-        configMapKeyRef:
-          name: kafka-metrics
-          key: kafka-metrics-config.yml
-{{- end }}
+
   zookeeper:
     replicas: {{ .Values.amqStreams.zookeeper.replicas | default "3" }}
+{{- if .Values.amqStreams.zookeeper.image }}
+    image: {{ .Values.amqStreams.zookeeper.image }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.storage }}
+    storage:
+      {{- toYaml .Values.amqStreams.zookeeper.storage | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.config }}
+    config:
+      {{- toYaml .Values.amqStreams.zookeeper.config | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.livenessProbe }}
+    livenessProbe:
+      {{- toYaml .Values.amqStreams.zookeeper.livenessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.readinessProbe }}
+    readinessProbe:
+      {{- toYaml .Values.amqStreams.zookeeper.readinessProbe | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.jvmOptions }}
+    jvmOptions:
+     {{- toYaml .Values.amqStreams.zookeeper.jvmOptions | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.jmxOptions }}
+    jmxOptions:
+     {{- toYaml .Values.amqStreams.zookeeper.jmxOptions | nindent 6 }}
+{{- end }}
 {{- if .Values.amqStreams.zookeeper.resources }}
     resources:
       {{- toYaml .Values.amqStreams.zookeeper.resources | nindent 6 }}
@@ -82,27 +147,10 @@ spec:
         memory: '2Gi'
         cpu: 1
 {{- end }}
-#{{- if .Values.amqStreams.zookeeper.jvmOptions }}
-#    jvmOptions:
-#      {{- toYaml .Values.amqStreams.zookeeper.jvmOptions | nindent 6 }}
-#{{- else }}
-#    jvmOptions: 
-#      -Xms: "1024"
-#      -Xmx: "1024"
-#{{- end }}
-{{- if .Values.amqStreams.zookeeper.readinessProbe }}
-    readinessProbe:
-      {{- toYaml .Values.amqStreams.zookeeper.readinessProbe | nindent 6 }}
-{{- end }}
-{{- if .Values.amqStreams.zookeeper.livenessProbe }}
-    livenessProbe:
-      {{- toYaml .Values.amqStreams.zookeeper.livenessProbe | nindent 6 }}
-{{- end }}
-{{- if .Values.amqStreams.zookeeper.storage }}
-    storage:
-      {{- toYaml .Values.amqStreams.zookeeper.storage | nindent 6 }}
-{{- end }}
 {{- if .Values.amqStreams.zookeeper.metricsConfig }}
+    metricsConfig:
+      {{- toYaml .Values.amqStreams.zookeeper.metricsConfig | nindent 6 }}
+{{- else }}
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:
@@ -110,17 +158,73 @@ spec:
           name: kafka-metrics
           key: zookeeper-metrics-config.yml
 {{- end }}
+{{- if .Values.amqStreams.zookeeper.logging }}
+    logging:
+      {{- toYaml .Values.amqStreams.zookeeper.logging | nindent 6 }}
+{{- else }}
+    logging:
+      type: inline
+      loggers:
+        zookeeper.root.logger: INFO
+{{- end }}
+{{- if .Values.amqStreams.zookeeper.template }}
+    template:
+     {{- toYaml .Values.amqStreams.zookeeper.template | nindent 6 }}
+{{- end }}
+{{- if .Values.amqStreams.entityOperator }}
+  entityOperator:
+    {{- toYaml .Values.amqStreams.entityOperator | nindent 4 }}
+{{- else }}
   entityOperator:
     topicOperator: {}
     userOperator: {}
-{{- if and .Values.amqStreams.zookeeper.metricsConfig }}
-{{- if and .Values.amqStreams.kafkaExporter }}
+    tlsSidecar: {}
+{{- end }}
+{{- if .Values.amqStreams.clusterCa }}
+  clusterCa:
+    {{- toYaml .Values.amqStreams.clusterCa | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.clientsCa }}
+  clientsCa:
+    {{- toYaml .Values.amqStreams.clientsCa | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.cruiseControl }}
+  cruiseControl:
+    {{- toYaml .Values.amqStreams.cruiseControl | nindent 4 }}
+{{- else }}
+  cruiseControl:
+    logging:
+      type: inline
+      loggers:
+        rootLogger.level: INFO
+        logger.exec.name: com.linkedin.kafka.cruisecontrol.executor.Executor
+        logger.exec.level: INFO
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: cruise-control-metrics
+          key: metrics-config.yml
+{{- end }}
+{{- if .Values.amqStreams.kafkaExporter }}
   kafkaExporter:
-    topicRegex: {{ .Values.amqStreams.kafkaExporter.topicRegex | default ".*" }}
-    groupRegex: {{ .Values.amqStreams.kafkaExporter.groupRegex | default ".*" }}
+    {{- toYaml .Values.amqStreams.kafkaExporter | nindent 4 }}
 {{- else }}
   kafkaExporter:
+    logging: info
+    # groupExcludeRegex: 
+    # topicExcludeRegex: 
     topicRegex: ".*"
     groupRegex: ".*"
+    resources: 
+      requests:
+        memory: '256Mi'
+        cpu:  '200m'
+      limits:
+        memory: '1Gi'
+        cpu: '500m'
 {{- end }}
+{{- if .Values.amqStreams.maintenanceTimeWindows }}
+  maintenanceTimeWindows: 
+    {{- toYaml .Values.amqStreams.maintenanceTimeWindows | nindent 4 }}
 {{- end }}

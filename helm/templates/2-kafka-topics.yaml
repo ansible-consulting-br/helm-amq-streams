@@ -10,8 +10,13 @@ metadata:
 spec:
   partitions: {{ $topic.partitions }}
   replicas: {{ $topic.replicas }}
+{{- if $topic.config }}
   config:
-    retention.ms: {{ $topic.retention_ms | default 7200000 }}
-    segment.bytes: {{ $topic.segment_bytes | default 1073741824 }}
+    {{- toYaml $topic.config | nindent 4 }}
+{{- else }}
+  config:
+    retention.ms: 7200000
+    segment.bytes: 1073741824
+{{- end }}
 {{- end }}
 {{- end }}

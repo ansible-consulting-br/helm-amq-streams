@@ -1,0 +1,75 @@
+{{- if .Values.amqStreams.bridge }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaBridge
+metadata:
+  name: {{ .Values.amqStreams.bridge.name }}
+spec:
+  replicas: {{ .Values.amqStreams.bridge.replicas | default 1 }}
+{{- if .Values.amqStreams.bridge.image }}
+  image: {{ .Values.amqStreams.bridge.image }}
+{{- end }}
+  bootstrapServers: {{ .Values.amqStreams.bridge.bootstrapServers }}
+{{- if .Values.amqStreams.bridge.tls }}
+  tls:
+    {{- toYaml .Values.amqStreams.bridge.tls | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.authentication }}
+  authentication:
+    {{- toYaml .Values.amqStreams.bridge.authentication | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.http }}
+  http:
+    {{- toYaml .Values.amqStreams.bridge.http | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.adminClient }}
+  adminClient:
+    {{- toYaml .Values.amqStreams.bridge.adminClient | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.consumer }}
+  consumer:
+    {{- toYaml .Values.amqStreams.bridge.consumer | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.producer }}
+  producer:
+    {{- toYaml .Values.amqStreams.bridge.producer | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.resources }}
+  resources:
+    {{- toYaml .Values.amqStreams.bridge.resources | nindent 4 }}  
+{{- else }}
+  resources: 
+    requests:
+      memory: '256Mi'
+      cpu:  '200m'
+    limits:
+      memory: '1Gi'
+      cpu: '500m'  
+{{- end }}
+{{- if .Values.amqStreams.bridge.logging }}
+  logging:
+    {{- toYaml .Values.amqStreams.bridge.logging | nindent 4 }}
+{{- else }}
+  logging:
+    type: inline
+    loggers:
+      rootLogger.level: INFO
+{{- end }}
+  enableMetrics: {{ .Values.amqStreams.bridge.enableMetrics | default true }}
+{{- if .Values.amqStreams.bridge.livenessProbe }}
+  livenessProbe:
+    {{- toYaml .Values.amqStreams.bridge.livenessProbe | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.readinessProbe }}
+  readinessProbe:
+    {{- toYaml .Values.amqStreams.bridge.readinessProbe | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.template }}
+  template:
+    {{- toYaml .Values.amqStreams.bridge.template | nindent 4 }}
+{{- end }}
+{{- if .Values.amqStreams.bridge.tracing }}
+  tracing:
+    {{- toYaml .Values.amqStreams.bridge.tracing | nindent 4 }}
+{{- end }}
+{{- end }}

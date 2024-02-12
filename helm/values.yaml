@@ -1,42 +1,52 @@
 amqStreams:
   kafka:
-    metricsConfig: true
     name: amq
-    version: 3.3.1
+    version:
     replicas: 3
+    image:
     listeners:
-      - name: plain
-        port: 9092
-        type: internal
-        tls: false
-    authorization:
-    resources: 
-    jvmOptions: 
-    readinessProbe:
-    livenessProbe:
-    logging:
     config:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
       default.replication.factor: 3
       min.insync.replicas: 2
-      inter.broker.protocol.version: "3.3"
+      # inter.broker.protocol.version: "3.3"
     storage:
       type: ephemeral
+    authorization:
+    rack:
+    brokerRackInitImage:
+    livenessProbe:
+    readinessProbe:
+    jvmOptions: 
+    jmxOptions: 
+    resources: 
+    metricsConfig: 
+    logging:
+    template:
   zookeeper:
     replicas: 3
-    resources: 
-    jvmOptions: 
-    readinessProbe:
-    livenessProbe:
+    image: 
     storage:
       type: ephemeral
+    config: 
+    livenessProbe:
+    readinessProbe:
+    jvmOptions: 
+    jmxOptions: 
+    resources: 
     metricsConfig:
-      type: jmxPrometheusExporter
-      valueFrom:
-        configMapKeyRef:
-          name: kafka-metrics
-          key: zookeeper-metrics-config.yml
+    logging: 
+    template: 
+  entityOperator:
+  clusterCa:
+  clientsCa:
+  cruiseControl:
+  kafkaExporter:
+  maintenanceTimeWindows:
+  bridge:
+  connects:
+  mm2:
   topics:
   users:

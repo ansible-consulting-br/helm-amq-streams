@@ -21,10 +21,22 @@ spec:
 {{- else }}
   authorization:
     type: simple
+    acls:
+      - resource:
+          type: topic
+          name: test-topic
+          patternType: literal
+        operations:
+          - Read
+          - Describe    
 {{- end }}
 {{- if $user.quotas }}
   quotas:
     {{- toYaml $user.quotas | nindent 4 }}
+{{- end }}
+{{- if $user.template }}
+  template:
+    {{- toYaml $user.template | nindent 4 }}
 {{- end }}
 {{- end }}
 {{- end }}

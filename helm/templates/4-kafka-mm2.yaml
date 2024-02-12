@@ -1,0 +1,68 @@
+{{- if .Values.amqStreams.mm2 }}
+{{- range $mm := .Values.amqStreams.mm2 }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaMirrorMaker2
+metadata:
+  name: {{ $mm.name }}
+spec:
+  version: {{ $mm.version }}
+  replicas: {{ $mm.replicas }}
+  connectCluster: {{ $mm.connectCluster }} # Must be the target custer
+{{- if $mm.clusters }}
+  clusters:
+    {{- toYaml $mm.clusters | nindent 4 }}
+{{- end }}
+{{- if $mm.mirrors }}
+  mirrors:
+    {{- toYaml $mm.mirrors | nindent 4 }}
+{{- end }}
+{{- if $mm.resources }}
+  resources:
+    {{- toYaml $mm.resources | nindent 4 }}
+{{- end }}
+{{- if $mm.livenessProbe }}
+  livenessProbe:
+    {{- toYaml $mm.livenessProbe | nindent 4 }}
+{{- end }}
+{{- if $mm.readinessProbe }}
+  readinessProbe:
+    {{- toYaml $mm.readinessProbe | nindent 4 }}
+{{- end }}
+{{- if $mm.jvmOptions }}
+  jvmOptions:
+    {{- toYaml $mm.jvmOptions | nindent 4 }}
+{{- end }}
+{{- if $mm.jmxOptions }}
+  jmxOptions:
+    {{- toYaml $mm.jmxOptions | nindent 4 }}
+{{- end }}
+{{- if $mm.logging }}
+  logging:
+    {{- toYaml $mm.logging | nindent 4 }}
+{{- end }}
+{{- if $mm.tracing }}
+  tracing:
+    {{- toYaml $mm.tracing | nindent 4 }}
+{{- end }}
+{{- if $mm.template }}
+  template:
+    {{- toYaml $mm.template | nindent 4 }}
+{{- end }}
+{{- if $mm.externalConfiguration }}
+  externalConfiguration:
+    {{- toYaml $mm.externalConfiguration | nindent 4 }}
+{{- end }}
+{{- if $mm.metricsConfig }}
+  metricsConfig:
+    {{- toYaml $mm.metricsConfig | nindent 4 }}
+{{- else }}
+    metricsConfig:
+      type: jmxPrometheusExporter
+      valueFrom:
+        configMapKeyRef:
+          name: mirror-maker-2-metrics
+          key: metrics-config.yml
+{{- end }}
+{{- end }}
+{{- end }}
