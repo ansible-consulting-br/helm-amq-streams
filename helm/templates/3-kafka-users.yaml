@@ -28,7 +28,7 @@ spec:
           patternType: literal
         operations:
           - Read
-          - Describe    
+          - Describe
 {{- end }}
 {{- if $user.quotas }}
   quotas:

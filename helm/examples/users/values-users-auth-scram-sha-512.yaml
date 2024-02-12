@@ -8,44 +8,23 @@ amqStreams:
       authorization:
         type: simple
         acls:
-          # Example ACL rules for consuming from marvel using consumer group my-group
+          # Example ACL rules for marvel topic using consumer group my-group
           - resource:
               type: topic
               name: marvel
               patternType: literal
-            operation: Read
-            host: "*"
-          - resource:
-              type: topic
-              name: marvel
-              patternType: literal
-            operation: Describe
-            host: "*"
+            operations:
+              - Read
+              - Describe
+              - Write
+              - Create
           - resource:
               type: group
               name: springboot
               patternType: literal
-            operation: Read
-            host: "*"
-          # Example ACL rules for producing to topic marvel
-          - resource:
-              type: topic
-              name: marvel
-              patternType: literal
-            operation: Write
-            host: "*"
-          - resource:
-              type: topic
-              name: marvel
-              patternType: literal
-            operation: Create
-            host: "*"
-          - resource:
-              type: topic
-              name: marvel
-              patternType: literal
-            operation: Describe
-            host: "*"
+            operations: 
+              - Read
+              - Describe
       quotas:
         # consumerByteRate: 1
         # controllerMutationRate: 1
