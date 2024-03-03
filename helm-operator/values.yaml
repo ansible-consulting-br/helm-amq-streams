@@ -1,9 +1,0 @@
-amqStreams:
-  namespace:
-    name: amq2
-    nodeSelector: 'env=amq-streams'
-    displayName: 'AMQ Streams'
-    description: 'AMQ Streams namespace automated with Helm'
-  subscription:
-    name: amq-streams
-    channel: amq-streams-2.x
